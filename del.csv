@@ -1,4 +1,4 @@
-HIT_Standard_Name,HIT_Standard_Version,Item_HIT_Code,Item_HIT_Text,Assessment_Instrument,Assessment_Instrument_Version,Item_ID,Short_Name,Item_Subsets,Response_HIT_Code,Assessment_Response_Codes,Response_HIT_Text
+HIT Standard Name,HIT Standard Version,Item HIT Code,Item HIT Text,Assessment Instrument,Assessment Instrument Version,Item ID,Short Name,Item Subsets,Response HIT Code,Assessment Response Codes,Response HIT Text
 LOINC,2.64,85396-0,IRF-PAI - Facility information [CMS Assessment],IRF-PAI,2,1,{Facility/provider} information,IA|ID,,,
 LOINC,2.64,45404-1,Marital status,IRF-PAI,2,10,Marital status,IA|ID,LA4288-2|LA47-6|LA48-4|LA49-2|LA51-8,4|1|2|3|5,Separated|Never married|Married|Widowed|Divorced
 SNOMED,SNOMED CT United States Edition 20170901,,,IRF-PAI,2,10,Marital status,IA|ID,125725006|13184001|20295000|33553000|87915002,1|4|5|3|2,"Marital status: single, never married (finding)|Separated (finding)|Divorced (finding)|Widowed (finding)|Married (finding)"
