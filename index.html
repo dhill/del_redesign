@@ -1,16 +1,6 @@
-<!-- Bootstrap for styling -->
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
-<!-- Using jquery because CMS already uses it -->
-<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-<!-- jquery-csv to read the del data -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-csv/0.71/jquery.csv-0.71.min.js"></script>
-<!-- DataTables for displaying/searching all elements -->
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.dataTables.min.css">
-<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
-<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
-<!-- Custom CSS -->
-<link rel="stylesheet" href="/css/main.css">
+---
+layout: default
+---
 <!-- Custom JS -->
 <script type="text/javascript">
   if (window.addEventListener) { // Mozilla, Netscape, Firefox
@@ -126,7 +116,11 @@
         <ul class='list-group list-group-flush'>" + version_details + "</ul>"
       let footer = "\
         <div class='card-footer'>\
-          <a class='btn btn-primary' href='" + assessment.url + "' target='_blank'>" + assessment.code + " Homepage</a>\
+          <a class='btn btn-primary' href='" +
+          assessment.url +
+          "' target='_blank'>" +
+          assessment.code +
+          " Homepage</a>\
         </div>"
       $("#assessment_instruments").append(
         "<div class='card'>\
@@ -137,50 +131,19 @@
       )
     });
     // Add Table of all data elements
-    var table = $('#table-container').DataTable({
+    $('#table-container').DataTable({
       data: table_data,
       columns: table_headers,
       responsive: true
     });
-    table;
   }
 </script>
-<div class="container">
-  <h1>CMS Data Element Library</h1>
-  <p class="lead">The <strong>CMS Data Element Library</strong> (DEL) is the centralized resource for CMS assessment instrument data elements (e.g. questions and responses) and their associated health information technology (IT) standards.</p>
-  <div class="alert alert-warning" role="alert">
-    This is a user interface redesign of the <a href='https://del.cms.gov/'>Official CMS Data Element Library</a>. It relies on client-side processing so it may take a few seconds to load.
-  </div>
 
-  <h2>DEL Mission and Goals</h2>
-  <p>The mission of the Data Element Library (DEL) is to create a comprehensive, electronic, distributable, and centralized resource of CMS assessment instrument content.</p>
-  <p>In support of the Improving Medicare Post-Acute Care Transformation Act (IMPACT Act), the goals of the DEL are to:</p>
-  <ul>
-    <li>Serve as a centralized resource for CMS assessment data elements (questions and response options)</li>
-    <li>Promote the sharing of electronic CMS assessment data sets and health information technology standards; and</li>
-    <li>Influence and support industry efforts to promote Electronic Health Record (EHR) and other health IT interoperability</li>
-  </ul>
-  <p>In support of CMS' focus on "Patients over Paperwork", the DEL promotes interoperable health information exchange by linking
-  CMS assessment questions and response options to nationally accepted health IT standards. Standardized and interoperable
-  data support health information exchange across healthcare settings to facilitate care coordination, improved health outcomes,
-  and reduced provider burden through the reuse of appropriate healthcare data.</p>
-
-  <h2>Assessment Instruments</h2>
-  <div id="assessment_instruments" class='card-columns'></div>
-
-  <h2>Search All Elements</h2>
-  <div class="alert alert-info" role="alert">
-    <strong>Search Tips:</strong>
-    <ul style='margin-bottom:0px;'>
-      <li>Use the plus symbol on the left of each row to see any data that doesn't fit on the page</li>
-      <li>The search box looks for text matches in all fields and is not case-sensitive</li>
-      <li>You can enter multiple search terms - just put a space between them</li>
-      <li>By default, only 10 items are shown, but you can change that</li>
-    </ul>
-  </div>
-  <table id='table-container' class='table table-striped table-bordered compact' style='width:100%;'>
-    <thead></thead>
-    <tbody></tbody>
-  </table>
-
+<h1>CMS Data Element Library</h1>
+<p class="lead">The <strong>CMS Data Element Library</strong> (DEL) is the centralized resource for CMS assessment instrument data elements (e.g. questions and responses) and their associated health information technology (IT) standards.</p>
+<div class="alert alert-warning" role="alert">
+  This is a user interface redesign of the <a href='https://del.cms.gov/'>Official CMS Data Element Library</a>. It relies on client-side processing so it may take a few seconds to load.
 </div>
+{% include mission.html %}
+{% include assessments.html %}
+{% include search.html %}
