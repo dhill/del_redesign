@@ -1,4 +1,9 @@
-# CMS Data Element Library UI Redesign
+---
+layout: page
+title: About
+permalink: /about/
+---
+
 This is a user interface redesign of the [CMS Data Element Library](https://del.cms.gov/DELWeb/pubHome).  It intends to address some of the issues with the current DEL site, including:
 * The [DEL homepage](https://del.cms.gov/DELWeb/pubHome) mentions pages for FAQ, Help, and a User Guide but does not link to them anywhere on the site
 * The [Download HIT Codes](https://del.cms.gov/DELWeb/pubDownloadHitCodesForm) page entirely omits the Hospice Item Set (HIS)
