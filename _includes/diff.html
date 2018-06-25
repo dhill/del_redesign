@@ -1,0 +1,58 @@
+<div class='container'>
+  <h2 id="diff_title" class="display-4">Compare Assessments</h2>
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <div class="form-group">
+          <label for="version_a"><strong>First Version</strong></label>
+          <select class="form-control" id="version_a">
+          </select>
+        </div>
+      </div>
+      <div class="col">
+        <div class="form-group">
+          <label for="version_b"><strong>Second Version</strong></label>
+          <select class="form-control" id="version_b">
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <button type="button" class="btn btn-primary btn-block" id='compare_button'>Compare Assessment Versions</button>
+      </div>
+    </div>
+  </div>
+  <br>
+  <div class="container">
+    <div class="row d-none" id='diff_results'>
+      <div class="col">
+        <div class="card">
+          <div class="card-header">
+            <strong>Unique to <span id="unique_a_title">the First Version</span></strong>
+          </div>
+          <ul class="list-group list-group-flush" id="unique_a">
+          </ul>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card">
+          <div class="card-header">
+            <strong>Shared by Both Versions</strong>
+          </div>
+          <ul class="list-group list-group-flush" id="shared">
+          </ul>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card">
+          <div class="card-header">
+            <strong>Unique to <span id="unique_b_title">the Second Version</span></strong>
+          </div>
+          <ul class="list-group list-group-flush" id="unique_b">
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

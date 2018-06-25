@@ -1,3 +1,57 @@
+* {
+  font-family: 'IBM Plex Sans', sans-serif;
+}
+
+body {
+  background-color: #FEFEFE;
+}
+
+#intro {
+  min-height: 100vh;
+  background-image: url("../img/thomas-lefebvre-3950-unsplash.jpg");
+  background-size: cover;
+}
+
+.jumbotron {
+  background-color: rgba(255,255,255,0.2);
+}
+
+#home_nav {
+  display: flex;
+  a {
+    background-color: #FEFEFE;
+    margin: 3px;
+    color: #0067d8;
+    &:hover {
+      color: #007bff;
+      background-color:white;
+      transition: all .20s ease-in-out
+    }
+  }
+  ion-icon {
+    font-size: 5rem;
+  }
+  p {
+    font-size: 1rem;
+  }
+  li {
+    display: flex;
+    flex: 1;
+    a {
+    flex: 1;
+    }
+  }
+}
+
+.display-4 {
+  margin-top: 6rem;
+  padding-top: 1rem;
+}
+
+.dataTable {
+  font-size: 0.8rem;
+}
+
 .dataTables_filter {
   label {
     font-weight: bold;

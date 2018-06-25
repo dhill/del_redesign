@@ -1,0 +1,38 @@
+[
+  {
+    "code": "IRF-PAI",
+    "name": "Inpatient Rehabilitation Facility Patient Assessment Instrument",
+    "description": "Assessment data collected on all Medicare Part A fee-for-service patients who receive services under Part A from an inpatient rehabilitation unit or hospital.",
+    "url": "https://www.cms.gov/Medicare/Medicare-Fee-for-Service-Payment/InpatientRehabFacPPS/IRFPAI.html"
+  },
+  {
+    "code": "LCDS",
+    "name": "Long-Term Care Hospital Continuity Assessment Record & Evaluation (CARE) Data Set",
+    "description": "A standardized primary screening and assessment tool of health status which forms the foundation of the comprehensive assessment for all residents (regardless of payer) of long-term care facilities certified to participate in Medicare or Medicaid.",
+    "url": "https://www.cms.gov/Medicare/Quality-Initiatives-Patient-Assessment-Instruments/LTCH-Quality-Reporting/LTCH-CARE-Data-Set-and-LTCH-QRP-Manual.html"
+  },
+  {
+    "code": "MDS3.0",
+    "name": "Resident Assessment Instrument (RAI) Minimum Data Set",
+    "description": "A comprehensive assessment and care planning process used by the nursing home industry since 1990 as a requirement for nursing home participation in the Medicare and Medicaid programs.",
+    "url": "https://www.cms.gov/Medicare/Quality-Initiatives-Patient-Assessment-Instruments/NursingHomeQualityInits/MDS30RAIManual.html"
+  },
+  {
+    "code": "OASIS",
+    "name": "Outcome and Assessment Information Set",
+    "description": "Represents core items of a comprehensive assessment for an adult home care patient and forms the basis for measuring patient outcomes for purposes of outcome-based quality improvement (OBQI).",
+    "url": "https://www.cms.gov/Medicare/Quality-Initiatives-Patient-Assessment-Instruments/OASIS/Background.html"
+  },
+  {
+    "code": "HIS",
+    "name": "Hospice Item Set",
+    "description": "A set of data elements that can be used to calculate 7 quality measures – 6 NQF-endorsed measures and 1 modified NQF-endorsed measure.",
+    "url": "https://www.cms.gov/Medicare/Quality-Initiatives-Patient-Assessment-Instruments/Hospice-Quality-Reporting/Hospice-Item-Set-HIS.html"
+  },
+  {
+    "code": "FASI",
+    "name": "Functional Assessment Standardized Items",
+    "description": "Includes items to measure functional ability including mobility, activities of daily living(e.g., bathing, dressing), instrumental activities of daily living(e.g., meal preparation), and caregiver availability.",
+    "url": "https://www.medicaid.gov/medicaid/ltss/teft-program/index.html"
+  }
+]

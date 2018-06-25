@@ -3,27 +3,26 @@ layout: default
 ---
 <!-- Custom JS -->
 <script type="text/javascript">
-  if (window.addEventListener) { // Mozilla, Netscape, Firefox
-    window.addEventListener('load', WindowLoad, false);
-  } else if (window.attachEvent) { // IE
-    window.attachEvent('onload', WindowLoad);
-  }
-
-  // Get data on page load
-  function WindowLoad(event) {
-    GetDEL();
-  }
-
-  // Retrieve csv from github
-  function GetDEL() {
+  // Get Assessment Item metadata from json
+  var assessment_item_details
+  $.ajax({
+    type: "GET",
+    url: "assessment_item_details.json",
+    dataType: "text",
+    success: function (response) {
+      assessment_item_details = JSON.parse(response)
+    }
+  })
+  // Get DEL data on page load
+  $(document).ready(function () {
     var data;
     $.ajax({
       type: "GET",
-      url: "https://raw.githubusercontent.com/notpace/del_redesign/master/del.csv",
+      url: "del.csv",
       dataType: "text",
       success: function (response) { data = ParseDEL(response) }
-    });
-  }
+    })
+  })
 
   // Parse the csv into more workable data sets
   function ParseDEL(data) {
@@ -32,7 +31,7 @@ layout: default
     const table_headers = $.csv.toArrays(data)[0].map(function (header) {
       return { title: header };
     });
-    // Remove the header and get rid of internal pipe characters
+    // Reformat data for the search table
     const pipe_replace = x => x.replace(/\|/g, ', ');
     const raw_table_data = $.csv.toArrays(data).slice(1)
     const table_data = raw_table_data.map(subarray => subarray.map(pipe_replace));
@@ -49,62 +48,93 @@ layout: default
     Object.keys(grouped_by_assessment).forEach(function (key) {
       grouped_by_version[key] = groupBy(grouped_by_assessment[key], 'Assessment Instrument Version')
     });
-    RenderDEL(data_objects, grouped_by_version, table_headers, table_data);
+    window.del_data_grouped = grouped_by_version
+    // Create an array of all assessment versions
+    let all_versions = {}
+    Object.keys(grouped_by_version).forEach(function (assessment) {
+      Object.keys(grouped_by_version[assessment]).forEach(function(version) {
+        let k = assessment + '|' + version
+        let v = assessment + ', Version ' + version
+        all_versions[k] = v
+      })
+    });
+    RenderDEL(grouped_by_version, all_versions, table_headers, table_data);
   }
 
-  const assessment_item_details = [
-    {
-      "code": "IRF-PAI",
-      "name": "Inpatient Rehabilitation Facility Patient Assessment Instrument",
-      "description": "Assessment data collected on all Medicare Part A fee-for-service patients who receive services under Part A from an inpatient rehabilitation unit or hospital.",
-      "url": "https://www.cms.gov/Medicare/Medicare-Fee-for-Service-Payment/InpatientRehabFacPPS/IRFPAI.html"
-    },
-    {
-      "code": "LCDS",
-      "name": "Long-Term Care Hospital Continuity Assessment Record & Evaluation (CARE) Data Set",
-      "description": "A standardized primary screening and assessment tool of health status which forms the foundation of the comprehensive assessment for all residents (regardless of payer) of long-term care facilities certified to participate in Medicare or Medicaid.",
-      "url": "https://www.cms.gov/Medicare/Quality-Initiatives-Patient-Assessment-Instruments/LTCH-Quality-Reporting/LTCH-CARE-Data-Set-and-LTCH-QRP-Manual.html"
-    },
-    {
-      "code": "MDS3.0",
-      "name": "Resident Assessment Instrument (RAI) Minimum Data Set",
-      "description": "A comprehensive assessment and care planning process used by the nursing home industry since 1990 as a requirement for nursing home participation in the Medicare and Medicaid programs.",
-      "url": "https://www.cms.gov/Medicare/Quality-Initiatives-Patient-Assessment-Instruments/NursingHomeQualityInits/MDS30RAIManual.html"
-    },
-    {
-      "code": "OASIS",
-      "name": "Outcome and Assessment Information Set",
-      "description": "Represents core items of a comprehensive assessment for an adult home care patient and forms the basis for measuring patient outcomes for purposes of outcome-based quality improvement (OBQI).",
-      "url": "https://www.cms.gov/Medicare/Quality-Initiatives-Patient-Assessment-Instruments/OASIS/Background.html"
-    },
-    {
-      "code": "HIS",
-      "name": "Hospice Item Set",
-      "description": "A set of data elements that can be used to calculate 7 quality measures – 6 NQF-endorsed measures and 1 modified NQF-endorsed measure.",
-      "url": "https://www.cms.gov/Medicare/Quality-Initiatives-Patient-Assessment-Instruments/Hospice-Quality-Reporting/Hospice-Item-Set-HIS.html"
-    },
-    {
-      "code": "FASI",
-      "name": "Functional Assessment Standardized Items",
-      "description": "Includes items to measure functional ability including mobility, activities of daily living(e.g., bathing, dressing), instrumental activities of daily living(e.g., meal preparation), and caregiver availability.",
-      "url": "https://www.medicaid.gov/medicaid/ltss/teft-program/index.html"
+  // Compute diffs between versions
+  function ComputeDiff(grouped_data, version_a, version_b) {
+    const get_keys = function (version) { return version.split('|') }
+    const get_item_ids = function (version) {
+      let item_ids = []
+      version.forEach(function (item) {
+        // Concatenating the Item ID and HIT Standard Name because Item IDs alone are not unique
+        item_ids.push(item["Item ID"] + "|" + item["HIT Standard Name"])
+      })
+      return item_ids
     }
-  ]
+    let a = get_item_ids(grouped_data[get_keys(version_a)[0]][get_keys(version_a)[1]])
+    let b = get_item_ids(grouped_data[get_keys(version_b)[0]][get_keys(version_b)[1]])
+    let unique_a = a.filter(function (x) { return b.indexOf(x) < 0 })
+    let unique_b = b.filter(function (x) { return a.indexOf(x) < 0 })
+    let shared = a.filter(function (x) { return b.indexOf(x) >= 0 })
+    return {
+      unique_a: unique_a,
+      unique_b: unique_b,
+      shared: shared,
+    }
+  }
+
+  // Return item details given a grouped data object and composite key
+  function ItemDetails(grouped_data, assessment, version, item_id, hit_standard){
+    let assessment_version = grouped_data[assessment][version]
+    let item = assessment_version.filter(function(i){
+      return i["Item ID"] == item_id & i["HIT Standard Name"] == hit_standard
+    })
+    return item[0]
+  }
+
+  // Helper to create item details launcher
+  const ItemLauncher = function (grouped_data, assessment, version, item_id, hit_standard) {
+    let item_text = item_id + " (" + hit_standard + ") "
+    let launcher_button = "<button type='button' class='btn btn-link btn-sm'\
+    data-toggle='modal' data-target='#item_detail' \
+    data-assessment=" + assessment + "\
+    data-version=" + version + "\
+    data-item_id=" + item_id + "\
+    data-hit_standard=" + hit_standard + "\
+    >Details</button>"
+    return item_text + launcher_button
+  }
+
+  // Helper to prepare data for csv download
+  // TODO: Fix this and implement a DownloadJSON
+  // const DownloadCSV = function(grouped_data, assessment, version) {
+    // let object_data = grouped_data[assessment][version]
+    // let csv_content = $.csv.fromObjects(object_data);
+    // var encodedUri = encodeURI(csv_content);
+    // window.open(encodedUri);
+  // }
+
 
   // Add rendered elements based on grouped data
-  function RenderDEL(all_data, grouped_data, table_headers, table_data) {
+  // TODO: Refactor this so it isn't so massive
+  function RenderDEL(grouped_data, all_versions, table_headers, table_data) {
+    // Add assessment cards
+    // TODO: Convert this section to a partial
     assessment_item_details.forEach(function (assessment) {
+      // TODO: Set up link to download version
       var version_details = ""
       try {
         Object.keys(grouped_data[assessment.code]).forEach(function (version) {
           version_details += "<li class='list-group-item'>" + 
             "<strong>Version " + version + ":</strong> " +
             grouped_data[assessment.code][version].length.toString() +
-            " Elements</li>"
+            " Elements <br>Download: <code>CSV</code> | <code>JSON</code></li>"
+            // " + DownloadCSV(grouped_data, assessment, version) + "
         })
       }
       catch (err) {
-        var version_details = "<li class='list-group-item'>Coming Soon</li>"
+        var version_details = "<li class='list-group-item'><em>Coming Soon</em></li>"
       }
       let header = "\
         <div class='card-header'>\
@@ -130,6 +160,52 @@ layout: default
         </div>"
       )
     });
+    // Fill the version comparison select boxes
+    $.each(all_versions, function (k, v) {
+      $('#version_a').append($('<option>', { value: k }).text(v));
+      $('#version_b').append($('<option>', { value: k }).text(v));
+    });
+    // Create diff on click
+    $("#compare_button").click(function(){
+      let diff = ComputeDiff( grouped_data, $('#version_a').val(), $('#version_b').val() )
+      // Un-hide the comparison lists
+      $("#diff_results").removeClass("d-none")
+      // Better labels
+      $('#unique_a_title').text(
+        $('#version_a').val().split("|")[0] + ", Version " +
+        $('#version_a').val().split("|")[1]
+      )
+      $('#unique_b_title').text(
+        $('#version_b').val().split("|")[0] + ", Version " +
+        $('#version_b').val().split("|")[1]
+      )
+      let lists = ["unique_a", "shared", "unique_b"]
+      lists.forEach(function(list){
+        // Clear any existing lists
+        $("#" + list).empty()
+        // Determine which assessment and version to use for each data element in the diff
+        switch (list) {
+          case "unique_b":
+            var assessment = $('#version_b').val().split("|")[0]
+            var version = $('#version_b').val().split("|")[1]
+            break
+          default:
+            var assessment = $('#version_a').val().split("|")[0]
+            var version = $('#version_a').val().split("|")[1]
+            break
+        }
+        // Populate each data element in the diff lists
+        diff[list].forEach(function(id){
+          let item_id = id.split("|")[0]
+          let hit_standard = id.split("|")[1]
+          $("#" + list).append(
+            "<li class='list-group-item'>" +
+            ItemLauncher(grouped_data, assessment, version, item_id, hit_standard) +
+            "</li>"
+          )
+        })
+      })
+    })
     // Add Table of all data elements
     $('#table-container').DataTable({
       data: table_data,
@@ -139,11 +215,10 @@ layout: default
   }
 </script>
 
-<h1>CMS Data Element Library</h1>
-<p class="lead">The <strong>CMS Data Element Library</strong> (DEL) is the centralized resource for CMS assessment instrument data elements (e.g. questions and responses) and their associated health information technology (IT) standards.</p>
-<div class="alert alert-warning" role="alert">
-  This is a user interface redesign of the <a href='https://del.cms.gov/'>Official CMS Data Element Library</a>. It relies on client-side processing so it may take a few seconds to load.
-</div>
+{% include intro.html %}
 {% include mission.html %}
 {% include assessments.html %}
 {% include search.html %}
+{% include diff.html %}
+{% include item_detail.html %}
+{% include about.html %}
