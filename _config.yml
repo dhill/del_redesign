@@ -16,7 +16,7 @@
 title: CMS Data Element Library
 description: >- # this means to ignore newlines until "baseurl:"
   User Interface Redesign for the CMS Data Element Library
-baseurl: "" # the subpath of your site, e.g. /blog
+baseurl: "/del_redesign" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site, e.g. http://example.com
 
 # Build settings
