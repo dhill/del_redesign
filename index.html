@@ -131,7 +131,9 @@ layout: default
             grouped_data[assessment.code][version].length.toString() +
             " Elements <br>Download: <code><a href='/del_redesign/data/" +
             assessment.code +"_"+ version +
-            ".csv" + "'>CSV</a></code></li>"
+            ".csv'>CSV</a></code> | <code><a href='/del_redesign/data/" + 
+            assessment.code + "_" + version +
+            ".pdf'>PDF</a></code></li>"
         })
       }
       catch (err) {
